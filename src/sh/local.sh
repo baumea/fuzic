@@ -191,7 +191,7 @@ END { for (i in id) print title[i], id[i], fname[i] }
 # theme-independent fashion. The lists are stored in the files
 # `LOCALDATA_ARTISTS_LIST` and `LOCALDATA_RELEASEGROUPS_LIST`.
 __precompute_lists() {
-  cache_get_file_batch "$TYPE_ARTIST" <"$LOCALDATA_ARTISTS" | xargs \
+  cache_get_file_batch "$TYPE_ARTIST" <"$LOCALDATA_ARTISTS" | xargs -d "\n" \
     $JQ '[
       .id,
       .type,
@@ -201,7 +201,7 @@ __precompute_lists() {
       .["life-span"].begin,
       .["life-span"].end
       ] | join("\t")' >"$LOCALDATA_ARTISTS_LIST" &
-  cache_get_file_batch "$TYPE_RELEASEGROUP" <"$LOCALDATA_RELEASEGROUPS" | xargs \
+  cache_get_file_batch "$TYPE_RELEASEGROUP" <"$LOCALDATA_RELEASEGROUPS" | xargs -d "\n" \
     $JQ '[
       .id,
       ."primary-type",
@@ -244,7 +244,7 @@ reloaddb() {
   tmpreleasefiles=$(mktemp)
   cache_get_file_batch "$TYPE_RELEASE" <"$tmpreleases" >"$tmpreleasefiles"
   (
-    xargs \
+    xargs -d "\n" \
       $JQ '."release-group".id' \
       <"$tmpreleasefiles" >"$LOCALDATA_RELEASEGROUPS"
     tf1=$(mktemp)
@@ -252,7 +252,7 @@ reloaddb() {
     mv "$tf1" "$LOCALDATA_RELEASEGROUPS"
   ) &
   (
-    xargs \
+    xargs -d "\n" \
       $JQ '."release-group"."artist-credit" | map(.artist.id) | join("\n")' \
       <"$tmpreleasefiles" >"$LOCALDATA_ARTISTS"
     tf2=$(mktemp)

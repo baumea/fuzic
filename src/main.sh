@@ -443,7 +443,7 @@ case "${1:-}" in
   ;;
 "--playlists")
   # List available playlists
-  stored_playlists
+  stored_playlists | cut -d "$(printf '\t')" -f 1
   exit 0
   ;;
 "--print-playlist")

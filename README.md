@@ -12,6 +12,7 @@ Control playback from your terminal while browsing the vast world of music relea
 - Handle metadata without touching your audio files
 - Fast and hackable application with [vim](https://www.vim.org)-like keybindings
 - Save and load playlists
+- Lyrics support
 
 🎞️ Screenshot
 -------------

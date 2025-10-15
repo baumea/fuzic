@@ -474,7 +474,7 @@ GENERAL OPTIONS:
   --playlists                   List stored playlists and exit
   --load-playlist <playlist>    Load specified playlist
   --print-playlist <playlist>   Print specified playlist and exit
-  --lyrics <release> <mbid>     Show lyrics specified track and exit
+  --lyrics <relid> <mbid>       Show lyrics of track <mbid> in release <relid> and exit
 
 MANAGE LOCAL MUSIC:
   --decorate <path>             Decorate directory containing a tagged release

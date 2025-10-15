@@ -55,5 +55,25 @@ if [ ! "${TOOLS_LOADED:-}" ]; then
   command -v "xsel" >/dev/null && CLIP="xsel" || CLIP="true"
   export CLIP
 
+  # Detect external editor
+  editor="${EDITOR:-vi}"
+  if command -v "$editor" >/dev/null; then
+    if command -v "kitty" >/dev/null; then
+      extedit=$(printf "kitty %s" "$editor")
+    elif command -v "x-terminal-emulator" >/dev/null; then
+      extedit=$(printf "x-terminal-emulator -e %s" "$editor")
+    elif command -v "gnome-terminal" >/dev/null; then
+      extedit=$(printf "gnome-terminal -- %s" "$editor")
+    elif command -v "xterm" >/dev/null; then
+      extedit=$(printf "xterm -e %s" "$editor")
+    else
+      extedit=""
+    fi
+  else
+    extedit=""
+  fi
+  EXTERNALEDIT="${EXTERNALEDIT:-"$extedit"}"
+  export EXTERNALEDIT
+
   export TOOLS_LOADED=1
 fi

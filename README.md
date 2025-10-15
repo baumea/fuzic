@@ -176,6 +176,28 @@ You may also define the playlist directory using the `PLAYLIST_DIRECTORY` enviro
 In `share/playlists` you find example playlists.
 Thus, the command `PLAYLIST_DIRECTORY=share/playlists fuzic` launches this application with access to these example playlists.
 
+📜 Lyrics
+---------
+By using the key `L` (normal mode), the lyrics of the selected track are displayed.
+The lyrics are taken from (in that order)
+1. the lyrics stored using `fuzic`, or
+2. from the `.lrc` file with the same name as the audio file, or
+3. from the audio-file tags (requires `ffprobe`), or
+4. from a custom script.
+
+To specify the custom script, you can set the `LYRICS_FETCH_CUSTOM` environment variable to point to an executable.
+The executable reads a JSON string on the standard input, and is supposed to print the lyrics (see `share/lyrics/example.sh`).
+
+You may also skip the first three sources and directly make a call to your custom script by using the key `Y` (normal mode).
+
+The key `alt-L` opens the lyrics in a new window using the `EDITOR`.
+This requires one of the following terminal emulators (`kitty`, `x-terminal-emulator`, `gnome-terminal`, `xterm`).
+If you use another terminal emulator, you may specify the environment variable `EXTERNALEDIT` to hold the string such that
+```sh
+$ExTERNALEDIT "$file"
+```
+spawns a text editor with `$file` loaded inside a terminal emulator.
+
 🧭 Planned Features
 -------------------
 The following features are planned:

@@ -63,6 +63,11 @@
 # - KEYS_PREVIEW_TOGGLE_SIZE: Toggle size (small, large) of preview window
 # - KEYS_REFRESH: Refresh current entry
 #
+# Lyrics:
+# - KEYS_N_LYRICS: Show lyrics of selected track
+# - KEYS_LYRICS_EDIT: Edit lyrics of selected track
+# - KEYS_N_LYRICS_FETCH_CUSTOM: Fetch lyrics using custom command
+#
 # Playback:
 # - KEYS_PLAY: Play selected release or selected track
 # - KEYS_QUEUE: Queue selected release or selected track
@@ -164,6 +169,12 @@ if [ ! "${KEYS_LOADED:-}" ]; then
     KEYS_SCROLL_PREVIEW_DOWN KEYS_SCROLL_PREVIEW_UP KEYS_PREVIEW_CLOSE \
     KEYS_PREVIEW_OPEN KEYS_PREVIEW_TOGGLE_WRAP KEYS_PREVIEW_TOGGLE_SIZE \
     KEYS_REFRESH
+
+  # Lyrics:
+  KEYS_N_LYRICS="${KEYS_N_LYRICS:-"L"}"
+  KEYS_LYRICS_EDIT="${KEYS_LYRICS_EDIT:-"alt-L"}"
+  KEYS_N_LYRICS_FETCH_CUSTOM="${KEYS_N_LYRICS_FETCH_CUSTOM:-"Y"}"
+  export KEYS_N_LYRICS KEYS_LYRICS_EDIT KEYS_N_LYRICS_FETCH_CUSTOM
 
   # Playback:
   KEYS_PLAY="${KEYS_PLAY:-"enter"}"
@@ -317,6 +328,10 @@ print_keybindings() {
       "$KEYS_PLAY_PREV,$KEYS_N_PLAY_PREV" "Play previous track" \
       "$KEYS_SEEK_FORWARD,$KEYS_N_SEEK_FORWARD" "Seek forward" \
       "$KEYS_SEEK_BACKWARD,$KEYS_N_SEEK_BACKWARD" "Seek backward"
+    __keybindinggroup_from_args "Lyrics" \
+      "$KEYS_N_LYRICS" "Show lyrics" \
+      "$KEYS_LYRICS_EDIT" "Edit lyrics" \
+      "$KEYS_N_LYRICS_FETCH_CUSTOM" "Fetch lyrics using custom command"
     __keybindinggroup_from_args "Special operations" \
       "$KEYS_BROWSE" "Open selected item in browser" \
       "$KEYS_OPEN" "Open selected item in file manager" \
@@ -405,6 +420,10 @@ print_keybindings() {
       "$KEYS_N_PLAY_PREV" "Play previous track" \
       "$KEYS_N_SEEK_FORWARD" "Seek forward" \
       "$KEYS_N_SEEK_BACKWARD" "Seek backward"
+    __keybindinggroup_from_args "Lyrics" \
+      "$KEYS_N_LYRICS" "Show lyrics (normal mode)" \
+      "$KEYS_LYRICS_EDIT" "Edit lyrics" \
+      "$KEYS_N_LYRICS_FETCH_CUSTOM" "Fetch lyrics using custom command (normal)"
     __keybindinggroup_from_args "Special operations" \
       "$KEYS_SHOW_PLAYLIST" "Show playlist" \
       "$KEYS_BROWSE" "Open selected item in browser" \

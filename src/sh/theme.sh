@@ -399,5 +399,10 @@ if [ ! "${THEME_LOADED:-}" ]; then
   PLYSTORE_PLAYLIST="${PLYSTORE_PLAYLIST:-"🎼 ${CPURPLE}%f${OFF}"}"
   export TITLE_PLYLST TITLE_PLYLST_STORE PLYSTORE_PLAYLIST
 
+  # Lyrics
+  # ======
+  LYRICS_NO_LYRICS="${LYRICS_NO_LYRICS:-"(no lyrics)"}"
+  export LYRICS_NO_LYRICS
+
   export THEME_LOADED=1
 fi

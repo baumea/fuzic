@@ -103,6 +103,9 @@ MODE_INSERT="show"
 # Load filters
 . "sh/filter.sh"
 
+# Load lyrics support
+. "sh/lyrics.sh"
+
 # Command-line options that may only be used internally.
 #   --lines
 #   --playback
@@ -115,6 +118,8 @@ MODE_INSERT="show"
 #   --preview
 #   --show-keybindings
 #   --remove-from-cache
+#   --edit-lyrics
+#   --lyrics-custom
 case "${1:-}" in
 "--lines")
   # Print lines that are fed into fzf.
@@ -286,6 +291,7 @@ case "${1:-}" in
     "$VIEW_SEARCH_ARTIST" | "$VIEW_LIST_ARTISTS") view="$VIEW_ARTIST" ;;
     "$VIEW_ARTIST" | "$VIEW_SEARCH_ALBUM" | "$VIEW_LIST_ALBUMS") view="$VIEW_RELEASEGROUP" ;;
     "$VIEW_RELEASEGROUP") view="$VIEW_RELEASE" ;;
+    "$VIEW_RELEASE") exit 0 ;;
     esac
     ;;
   *) ;;
@@ -369,6 +375,20 @@ case "${1:-}" in
   esac
   exit 0
   ;;
+"--edit-lyrics")
+  # Edit lyrics file in an external window
+  info "Call to $*"
+  mbid="${2:-}"
+  file="$(lyrics_file "$mbid")"
+  [ -f "$file" ] || echo "No lyrics" | store_lyrics "$mbid"
+  [ "$EXTERNALEDIT" ] && $EXTERNALEDIT "$file" || err "Failed to externally edit the file $file"
+  exit 0
+  ;;
+"--lyrics-custom")
+  # Use custom command to (re-)fetch the lyrics
+  store_lyrics_custom "$2" "$3"
+  exit 0
+  ;;
 esac
 
 # Non-interactive user commands intended to the user. These commands do not
@@ -432,6 +452,11 @@ case "${1:-}" in
     cut -d "$(printf '\t')" -f 1
   exit 0
   ;;
+"--lyrics")
+  shift
+  lyrics "$@"
+  exit 0
+  ;;
 "--help")
   # Print help string
   cat <<EOF
@@ -449,6 +474,7 @@ GENERAL OPTIONS:
   --playlists                   List stored playlists and exit
   --load-playlist <playlist>    Load specified playlist
   --print-playlist <playlist>   Print specified playlist and exit
+  --lyrics <release> <mbid>     Show lyrics specified track and exit
 
 MANAGE LOCAL MUSIC:
   --decorate <path>             Decorate directory containing a tagged release
@@ -571,6 +597,7 @@ fi
 IN_NORMAL_MODE="[ \$FZF_INPUT_STATE = hidden ]"
 IN_VIEW_PATTERN="[ \$FZF_LIST_LABEL = %s ]"
 IN_LIST_ARTISTS_VIEW="$(printf "$IN_VIEW_PATTERN" "$VIEW_LIST_ARTISTS")"
+IN_RELEASE_VIEW="$(printf "$IN_VIEW_PATTERN" "$VIEW_RELEASE")"
 FZF_CURRENT_MODE="\$FZF_INPUT_STATE"
 FZF_CURRENT_VIEW="\$FZF_LIST_LABEL"
 FZF_CURRENT_MBID="\$FZF_BORDER_LABEL"
@@ -735,6 +762,9 @@ while true; do
         --bind="$KEYS_PLAYLIST_GOTO_RELEASE:print($VIEW_RELEASE)+accept" \
         --bind="$KEYS_PLAYLIST_STORE:print($VIEW_PLAYLIST_STORE)+print("")+print($LASTVIEW)+print($LASTARG)+accept" \
         --bind="$KEYS_PLAYLIST_OPEN_STORE:print($VIEW_PLAYLIST_PLAYLISTSTORE)+print("")+print($LASTVIEW)+print($LASTARG)+accept" \
+        --bind="$KEYS_N_LYRICS:show-preview+preview:$0 --lyrics {3} {4}" \
+        --bind="$KEYS_LYRICS_EDIT:execute-silent:$0 --edit-lyrics {4}" \
+        --bind="$KEYS_N_LYRICS_FETCH_CUSTOM:execute-silent($0 --lyrics-custom {3} {4})+show-preview+preview:$0 --lyrics {3} {4}" \
         --preview-window="hidden" \
         --wrap-sign="" \
         --delimiter="\t" \
@@ -830,6 +860,9 @@ open \"\$(dirname {5})\"" \
         --bind="$KEYS_PREVIEW_CLOSE:hide-preview" \
         --bind="$KEYS_PLAYBACK:transform:$0 --playback $FZF_CURRENT_VIEW \"$FZF_CURRENT_MBID\" {4} {5}" \
         --bind="$KEYS_N_PLAYBACK:transform:$IN_NORMAL_MODE && $0 --playback $FZF_CURRENT_VIEW \"$FZF_CURRENT_MBID\" {4} {5} || $PUT_FZF_KEY_LOGIC" \
+        --bind="$KEYS_N_LYRICS:transform:$IN_NORMAL_MODE && $IN_RELEASE_VIEW && printf \"show-preview+preview:%s --lyrics %s %s\" \"$0\" {3} {4}" \
+        --bind="$KEYS_LYRICS_EDIT:transform:$IN_RELEASE_VIEW && printf \"execute-silent:%s --edit-lyrics %s\" \"$0\" {4}" \
+        --bind="$KEYS_N_LYRICS_FETCH_CUSTOM:transform:$IN_NORMAL_MODE && $IN_RELEASE_VIEW && {$0 --lyrics-custom {3} {4};printf \"show-preview+preview:%s --lyrics %s %s\" \"$0\" {3} {4}}" \
         --bind="change:execute-silent($0 --mbsearch $FZF_CURRENT_VIEW &)+reload:$0 --lines $FZF_CURRENT_VIEW" \
         --preview-window="$FZF_DEFAULT_PREVIEW_WINDOW" \
         --wrap-sign="" \

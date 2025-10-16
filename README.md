@@ -20,7 +20,7 @@ Control playback from your terminal while browsing the vast world of music relea
 The MusicBrainz database is automatically searched after entering a query.
 In the screenshot below, the emoji 🔆 indicates that some tracks of _Mc Solaar_ are available in the local music library.
 They are played by hitting `<enter>`.
-![MusicBrainz artist search](//screenshots/search.png)
+![MusicBrainz artist search](./screenshots/search.png)
 
 ### Browse Local Music Library
 Here, we fuzzily search an album of _Daft Punk._
@@ -120,7 +120,7 @@ $ fuzic --decorate ~/Music/Daft\ Punk/Random\ Access\ Memories
 Info: Decorating /home/amin/Music/Daft Punk/Random Access Memories as release 5000a285-b67e-4cfc-b54b-2b98f1810d2e
 $ fuzic --decorate-as ~/Music/Mc\ Solaar/Prose\ Combat 69e5cf67-7cea-4fe8-9129-9779f0a93d69
 Info: Decorating /home/amin/Music/Mc Solaar/Prose Combat as the release Prose Combat by MC Solaar
-Info: We discovered the following associatoin:
+Info: We discovered the following association:
 Track 'Aubade'                         File './01 Aubade.m4a'
 Track 'Obsolète'                       File './02 Obsolète.m4a'
 Track 'Nouveau western'                File './03 Nouveau western.m4a'

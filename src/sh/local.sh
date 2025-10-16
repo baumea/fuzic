@@ -157,7 +157,7 @@ END { for (i in id) print title[i], id[i], fname[i] }
 ' "$tmpj" "$tmpf" >"$assocfile"
   rm -f "$tmpj" "$tmpf"
   # Ask user if this is ok
-  info "We discovered the following associatoin:"
+  info "We discovered the following association:"
   while IFS= read -r line; do
     t="$(echo "$line" | cut -d "$(printf '\t')" -f 1)"
     f="$(echo "$line" | cut -d "$(printf '\t')" -f 3)"
